@@ -1,32 +1,39 @@
-package com.expensecalculator.project.payment;
+package com.expensecalculator.payment;
 
-import com.expensecalculator.project.user.User;
+import com.expensecalculator.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPayment;
+
+    @Column(columnDefinition = "text", nullable = false)
+    private String description;
+
+    @Column
+    private String location;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -35,13 +42,9 @@ public class Payment {
     @Column(updatable = false)
     private LocalDateTime startDataTime;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "payment_user",
-            joinColumns = @JoinColumn(name = "idPayment"),
-            inverseJoinColumns = @JoinColumn(name = "idUser")
-    )
-    public Set<User> users;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    public User users;
 
     @PersistenceConstructor
     public Payment() {

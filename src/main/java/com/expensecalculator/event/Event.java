@@ -1,9 +1,10 @@
-package com.expensecalculator.project.event;
+package com.expensecalculator.event;
 
-import com.expensecalculator.project.user.User;
+import com.expensecalculator.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.CascadeType;
@@ -21,10 +22,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Table(name = "event")
-public class MeetingEvent {
+public class Event {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,11 +40,11 @@ public class MeetingEvent {
     @Column(updatable = false)
     private LocalDateTime startDataTime;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy ="meetingEvent", orphanRemoval = true)
-    private Set<User> users = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = true)
+    private Set<User> users;
 
     @PersistenceConstructor
-    public MeetingEvent() {
+    public Event() {
     }
 
     @PrePersist
@@ -50,7 +52,25 @@ public class MeetingEvent {
         this.startDataTime = LocalDateTime.now();
     }
 
-    public MeetingEvent(String name) {
+    public Event(String name) {
         this.name = name;
     }
+
+    public void addUser(User user) {
+        if (users == null) {
+            users = new HashSet<>();
+        }
+        users.add(user);
+        user.setEvent(this);
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Event{" +
+//                "idEvent=" + idEvent +
+//                ", name='" + name + '\'' +
+//                ", startDataTime=" + startDataTime +
+//                ", users=" + users +
+//                '}';
 }
+
