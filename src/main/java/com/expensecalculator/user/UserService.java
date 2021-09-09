@@ -26,13 +26,7 @@ public class UserService {
     }
 
    public User created(User newUser, Long id) {
-        Optional<Event> eventOptional = eventService.searchForAnEventById(id);
-        Event event;
-        if (!eventOptional.isPresent()) {
-            throw new RuntimeException("Can not event for id: " + id);
-        }else {
-            event = eventOptional.get();
-        }
+        Event event = eventService.getEventForUserById(id);
         User user = new User(newUser, event);
         userRepository.save(user);
         return user;

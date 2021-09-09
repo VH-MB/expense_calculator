@@ -2,7 +2,6 @@ package com.expensecalculator.event;
 
 import com.expensecalculator.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -18,13 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @Table(name = "event")
 public class Event {
 
@@ -52,25 +49,22 @@ public class Event {
         this.startDataTime = LocalDateTime.now();
     }
 
-    public Event(String name) {
-        this.name = name;
-    }
 
-    public void addUser(User user) {
-        if (users == null) {
-            users = new HashSet<>();
-        }
-        users.add(user);
-        user.setEvent(this);
-    }
+//    public void addUser(User user) {
+//        if (users == null) {
+//            users = new HashSet<>();
+//        }
+//        users.add(user);
+//        user.setEvent(this);
+//    }
 
-//    @Override
-//    public String toString() {
-//        return "Event{" +
-//                "idEvent=" + idEvent +
-//                ", name='" + name + '\'' +
-//                ", startDataTime=" + startDataTime +
-//                ", users=" + users +
-//                '}';
+    @Override
+    public String toString() {
+        return "Event{" +
+                "idEvent=" + idEvent +
+                ", name='" + name + '\'' +
+                ", startDataTime=" + startDataTime +
+                ", users=" + users +
+                '}';
+    }
 }
-

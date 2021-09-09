@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,17 +27,18 @@ class EventController {
 
     @GetMapping("/all")
     ResponseEntity<List<EventDto>> getAllEvent() {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAllEvent());
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.findAllEvent());
     }
 
     @GetMapping("/find/{id}")
     ResponseEntity<EventDto> getEventById(@PathVariable("id") String eventId) {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.findByIdEvent(Long.parseLong(eventId)));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(eventService.findByIdEvent(Long.parseLong(eventId)));
     }
 
     @PostMapping("/add")
-    ResponseEntity<EventDto> createdEvent(@RequestBody EventDto eventDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.created(eventDto));
+    ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventDto));
     }
 
     @DeleteMapping("/delete/{id}")

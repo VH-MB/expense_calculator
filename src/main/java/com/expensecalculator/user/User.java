@@ -75,13 +75,14 @@ public class User {
 //    }
 
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "idUser=" + idUser +
-//                ", firstName='" + firstName + '\'' +
-//                ", lastName='" + lastName + '\'' +
-//                ", payments=" + payments +
-//                '}';
-}
+    @Override
+    public String toString() {
+        return "User{" +
+                "idUser=" + idUser +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", payments=" + payments +
+                '}';
 
+    }
+}

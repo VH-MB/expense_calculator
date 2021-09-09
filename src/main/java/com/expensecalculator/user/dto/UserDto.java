@@ -4,6 +4,7 @@ import com.expensecalculator.event.dto.EventDto;
 import com.expensecalculator.payment.dto.PaymentDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Id;

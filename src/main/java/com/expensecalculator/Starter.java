@@ -1,5 +1,8 @@
-package com.expensecalculator.event;
+package com.expensecalculator;
 
+import com.expensecalculator.event.Event;
+import com.expensecalculator.event.EventService;
+import com.expensecalculator.event.dto.EventDto;
 import com.expensecalculator.user.UserService;
 import com.expensecalculator.user.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
@@ -9,15 +12,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-class EventStarter implements CommandLineRunner {
+class Starter implements CommandLineRunner {
 
     private EventService eventService;
     private UserService userService;
 
-    public static Logger logger = LogManager.getLogger(EventStarter.class);
+    public static Logger logger = LogManager.getLogger(Starter.class);
 
     @Autowired
-    public EventStarter(EventService eventService, UserService userService) {
+    public Starter(EventService eventService, UserService userService) {
         this.eventService = eventService;
         this.userService = userService;
     }
@@ -35,25 +38,28 @@ class EventStarter implements CommandLineRunner {
 ////        userService.created(user2, 1L);
 ////        userService.created(user3, 2L);
 ////        userService.created(user4, 2L);
+//        UserDto userDto = UserDto.builder()
+//                .firstName("Volodymyr")
+//                .lastName("Holovetskyi")
+//                .build();
 //
-//        Event event = new Event("Wycieczka w gury");
+        EventDto event = EventDto.builder()
+                .name("Wycieczka w gury")
+                .build();
+//        event.addUserDto(userDto);
+
 //        event.addUser(user1);
 //        event.addUser(user2);
 //        Event event1 = new Event("Wycieczka do Warszawy");
-//        event1.addUser(user3);
+//        event1.addUser(user2ser3);
 //        event1.addUser(user4);
 //
-//        Event events = eventService.created(event);
+        EventDto event1 = eventService.createEvent(event);
 //        Event events1 = eventService.created(event1);
 //        Optional<Event> allEvent = eventFacade.findByIdEvent(2L);
 //        eventFacade.remove(1L);
 
-//            logger.info("Wydażenia {}", events);
-
-        UserDto userDto = UserDto.builder()
-                .firstName("Volodymyr")
-                .lastName("Holovetskyi")
-                .build();
+        logger.info("Wydażenia {}", event1);
 
 
     }
