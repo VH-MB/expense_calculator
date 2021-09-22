@@ -9,6 +9,8 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,9 +33,12 @@ public class Event {
     @Column(nullable = false)
     private Long idEvent;
 
-    @NotBlank(message = "Can not null")
+    @NotBlank
     @Column(nullable = false)
     private String name;
+
+    @Enumerated(value = EnumType.STRING)
+    private EventStatus eventStatus;
 
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
@@ -50,15 +55,6 @@ public class Event {
     protected void onCreated() {
         this.startDataTime = LocalDateTime.now();
     }
-
-
-//    public void addUser(User user) {
-//        if (users == null) {
-//            users = new HashSet<>();
-//        }
-//        users.add(user);
-//        user.setEvent(this);
-//    }
 
     @Override
     public String toString() {

@@ -1,23 +1,20 @@
 package com.expensecalculator.modules.user.dto;
 
-import com.expensecalculator.modules.event.Event;
-import com.expensecalculator.modules.event.dto.EventDto;
-import com.expensecalculator.modules.payment.dto.PaymentDto;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Id;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
+@Data
 @Builder
-@Getter
-@Setter
 public class UserDto {
 
     @Id
     private Long id;
+    @NotBlank
+    @Size(min = 2, max = 30)
     private String firstName;
     private String lastName;
-    private List<PaymentDto> payments;
 }

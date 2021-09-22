@@ -1,5 +1,6 @@
-package com.expensecalculator.utils.validation;
+package com.expensecalculator.security.validation;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Scope(value = "prototype")
 public class ResponseErrorValidation {
 
     public ResponseEntity<Object> mapValidationService(BindingResult result) {
@@ -21,7 +23,6 @@ public class ResponseErrorValidation {
             if (!CollectionUtils.isEmpty(result.getAllErrors())) {
                 for (ObjectError error : result.getAllErrors()) {
                     errorMap.put(error.getCode(), error.getDefaultMessage());
-                    errorMap.put("Status: ", HttpStatus.BAD_REQUEST.value());
                 }
             }
             for (FieldError error : result.getFieldErrors()) {

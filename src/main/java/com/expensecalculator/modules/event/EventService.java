@@ -19,45 +19,33 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventQueryRepository eventQueryRepository;
-    private final EventFacade eventFacade;
 
+    public List<Event> findAllEvent() {
+        List<Event> events = eventQueryRepository.findAll();
 
-    List<EventDto> findAllEvent() {
-        List<Event> allEvent = eventQueryRepository.findAll();
-
-        if (allEvent == null) {
-            LOG.warn("List events is empty");
+        if (events == null) {
             return Collections.emptyList();
         }
         LOG.info("Downloads of all events!!!");
-        return allEvent.stream()
-                .map(eventFacade::eventToEventDto)
-                .collect(Collectors.toList());
+        return events;
     }
 
-    EventDto findByIdEvent(Long id) {
+    public Event findByIdEvent(Long id) {
         return eventQueryRepository.findByIdEvent(id)
-                .map(eventFacade::eventToEventDto)
                 .orElseThrow(() -> new EventNotFoundException(id));
     }
 
-    EventDto createEvent(EventDto eventDto) {
+    public Event createEvent(EventDto eventDto) {
         Event event = new Event();
         event.setIdEvent(eventDto.getId());
         event.setName(eventDto.getName());
 
         Event createdEvent = eventRepository.save(event);
         LOG.info("Saving event: {}", event);
-
-        return eventFacade.eventToEventDto(createdEvent);
+        return createdEvent;
     }
 
-    void remove(Long id) {
+    public void remove(Long id) {
         eventRepository.deleteById(id);
-    }
-
-    public Event getEventForUserById(Long id) {
-        return eventQueryRepository.findByIdEvent(id)
-                .orElseThrow(() -> new EventNotFoundException(id));
     }
 }

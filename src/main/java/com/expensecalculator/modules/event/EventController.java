@@ -2,8 +2,8 @@ package com.expensecalculator.modules.event;
 
 
 import com.expensecalculator.modules.event.dto.EventDto;
-import com.expensecalculator.utils.payload.MessageResponse;
-import com.expensecalculator.utils.validation.ResponseErrorValidation;
+import com.expensecalculator.security.payload.response.MessageResponse;
+import com.expensecalculator.security.validation.ResponseErrorValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,33 +29,35 @@ import java.util.List;
 class EventController {
 
     private final EventService eventService;
+    private final EventFacade eventFacade;
     private final ResponseErrorValidation responseErrorValidation;
 
     @GetMapping("/all")
     ResponseEntity<List<EventDto>> getAllEvent() {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.findAllEvent());
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.findAllEvent()
+                        .stream().map(eventFacade::eventToEventDto)
+                        .collect(Collectors.toList()));
     }
 
     @GetMapping("/find/{id}")
     ResponseEntity<EventDto> getEventById(@PathVariable("id") String eventId) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(eventService.findByIdEvent(Long.parseLong(eventId)));
+        Event event = eventService.findByIdEvent(Long.parseLong(eventId));
+        return ResponseEntity.status(HttpStatus.OK).body(eventFacade.eventToEventDto(event));
     }
 
     @PostMapping("/add")
-    ResponseEntity<Object> createEvent(@Valid @RequestBody EventDto eventDto,
-                                       BindingResult bindingResult) {
+    ResponseEntity<Object> createEvent(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
-        if (!ObjectUtils.isEmpty(errors)) {
-            return errors;
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventDto));
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+        Event event = eventService.createEvent(eventDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(eventFacade.eventToEventDto(event));
     }
 
     @DeleteMapping("/delete/{id}")
     ResponseEntity<MessageResponse> deleteEventById(@PathVariable("id") String eventId) {
         eventService.remove(Long.parseLong(eventId));
-        return new ResponseEntity<>(new MessageResponse("Event was deleted"), HttpStatus.OK);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Event was deleted"));
     }
 }

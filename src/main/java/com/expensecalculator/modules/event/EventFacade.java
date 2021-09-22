@@ -4,10 +4,9 @@ import com.expensecalculator.modules.event.dto.EventDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventFacade {
+class EventFacade {
 
-    public EventDto eventToEventDto(Event event){
-
+    public EventDto eventToEventDto(Event event) {
         return EventDto.builder()
                 .id(event.getIdEvent())
                 .name(event.getName())

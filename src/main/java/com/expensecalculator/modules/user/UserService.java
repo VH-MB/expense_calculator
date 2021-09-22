@@ -3,6 +3,7 @@ package com.expensecalculator.modules.user;
 import com.expensecalculator.modules.event.Event;
 import com.expensecalculator.modules.event.EventService;
 import com.expensecalculator.modules.user.dto.UserDto;
+import com.expensecalculator.modules.user.exeption.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -22,27 +21,33 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserQueryRepository userQueryRepository;
     private final EventService eventService;
-    private final UserFacade userFacade;
 
-    List<UserDto> findAllUser() {
-        List<User> allUser = userQueryRepository.findAll();
-        if (allUser == null) {
+    List<User> findAllUser() {
+        List<User> users = userQueryRepository.findAll();
+        if (users == null) {
             return Collections.emptyList();
         }
-        return allUser.stream()
-                .map(userFacade::userToUserDto)
-                .collect(Collectors.toList());
+        return users;
     }
 
-    Optional<User> findByIdUser(Long id) {
-        Optional<User> byId = userQueryRepository.findById(id);
-        return byId;
+    public User findUserById(Long id) throws UserNotFoundException {
+        return userQueryRepository.findUserById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User createdUser(User newUser, Long id) {
-        Event event = eventService.getEventForUserById(id);
-        User user = new User(newUser, event);
-        userRepository.save(user);
-        return user;
+    User createdUser(UserDto userDto, Long eventId) {
+        Event event = eventService.findByIdEvent(eventId);
+
+        User user = new User();
+        user.setIdUser(userDto.getId());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.addEvent(event);
+
+        return userRepository.save(user);
+    }
+
+    public void remove(long userId) {
+        userRepository.deleteById(userId);
     }
 }

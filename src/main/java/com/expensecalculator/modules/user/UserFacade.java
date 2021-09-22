@@ -4,7 +4,7 @@ import com.expensecalculator.modules.user.dto.UserDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserFacade {
+class UserFacade {
 
     public UserDto userToUserDto(User user) {
         return UserDto.builder()

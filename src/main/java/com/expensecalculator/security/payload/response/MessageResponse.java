@@ -1,4 +1,4 @@
-package com.expensecalculator.utils.payload;
+package com.expensecalculator.security.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
