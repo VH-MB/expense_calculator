@@ -1,8 +1,8 @@
 package com.expensecalculator.security.jwt;
 
-import com.expensecalculator.modules.user.User;
-import com.expensecalculator.modules.user.UserQueryRepository;
-import com.expensecalculator.modules.user.exeption.UserNotFoundException;
+import com.expensecalculator.security.user.User;
+import com.expensecalculator.security.user.UserQueryRepository;
+import com.expensecalculator.security.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,11 +32,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         return build(user);
     }
 
-    public User loadUserById(Long id){
-        return userQueryRepository.findUserById(id).orElseThrow(null);
+    public User loadUserById(Long id) {
+        return userQueryRepository.findByIdUser(id).orElse(null);
     }
 
-    public static User build(User user){
+    public static User build(User user) {
         List<GrantedAuthority> authorities = user.getRole().stream()
                 .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
@@ -49,3 +49,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 authorities);
     }
 }
+

@@ -1,16 +1,16 @@
-package com.expensecalculator.modules.user;
+package com.expensecalculator.modules.person;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 
 import javax.transaction.Transactional;
 
-interface UserRepository extends JpaRepository<User, Long> {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    User save(User user);
+    Person save(Person person);
 
     @Transactional
     @Modifying
-    void deleteById(Long userId);
+    void deleteById(Long personId);
 
 }

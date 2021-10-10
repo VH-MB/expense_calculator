@@ -1,8 +1,8 @@
-package com.expensecalculator.modules.user;
+package com.expensecalculator.security.user;
+
 
 import com.expensecalculator.modules.event.Event;
-import com.expensecalculator.modules.payment.Payment;
-import com.expensecalculator.modules.user.enums.ERole;
+import com.expensecalculator.security.user.enums.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +20,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -32,34 +34,39 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
+@Table(name = "user",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"email", "username"}
+        ))
+
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
+
     @Column(nullable = false)
     private String firstName;
-    @Column
+
+    @Column(nullable = false)
     private String lastName;
-    @Column(unique = true)
-    private String userName;
-    @Column(unique = true, updatable = false)
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(updatable = false)
     private String email;
+
     @Column(length = 300)
     private String password;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    private List<Event> events = new ArrayList<>();
+
     @ElementCollection(targetClass = ERole.class)
     @CollectionTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"))
+            joinColumns = @JoinColumn(name = "id_user"))
     private Set<ERole> role = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade =
-            {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "id_event")
-    private Event event;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<Payment> payments;
 
     @Transient
     public Collection<? extends GrantedAuthority> authorities;
@@ -68,18 +75,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long idUser, String userName, String password, String email,
+    public User(Long idUser, String username, String password, String email,
                 Collection<? extends GrantedAuthority> authorities) {
         this.idUser = idUser;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.email = email;
         this.authorities = authorities;
-    }
-
-    void addEvent(Event newEvent) {
-        if (event == null) event = new Event();
-        this.event = newEvent;
     }
 
     /**
@@ -92,7 +94,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override

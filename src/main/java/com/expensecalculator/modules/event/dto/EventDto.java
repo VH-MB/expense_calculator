@@ -1,7 +1,9 @@
 package com.expensecalculator.modules.event.dto;
 
+import com.expensecalculator.shared.validation.ValidationMessages;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
@@ -14,8 +16,9 @@ public class EventDto {
 
     @Id
     private Long id;
-    @NotBlank
-    @Size(min = 4, max = 40)
+
+    @NotBlank(message = ValidationMessages.EVENT_NAME_REQUIRED)
     private String name;
+
     private LocalDateTime startDataTime;
 }

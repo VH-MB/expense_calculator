@@ -1,6 +1,6 @@
 package com.expensecalculator.security.jwt;
 
-import com.expensecalculator.modules.user.User;
+import com.expensecalculator.security.user.User;
 import com.expensecalculator.security.constants.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +22,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     public static final Logger LOG = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
-
+    @Autowired
     private JWTTokenProvider jwtTokenProvider;
+    @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    public JWTAuthenticationFilter(final JWTTokenProvider jwtTokenProvider,
-                                   final CustomUserDetailsService customUserDetailsService) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.customUserDetailsService = customUserDetailsService;
-    }
-
-    public JWTAuthenticationFilter() {
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,

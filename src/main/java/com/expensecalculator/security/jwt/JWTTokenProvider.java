@@ -1,6 +1,6 @@
 package com.expensecalculator.security.jwt;
 
-import com.expensecalculator.modules.user.User;
+import com.expensecalculator.security.user.User;
 import com.expensecalculator.security.constants.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

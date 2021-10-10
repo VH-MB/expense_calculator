@@ -1,4 +1,4 @@
-package com.expensecalculator.modules.user.enums;
+package com.expensecalculator.security.user.enums;
 
 public enum ERole {
 

@@ -1,10 +1,10 @@
 package com.expensecalculator.security.config;
 
+import com.expensecalculator.security.constants.SecurityConstants;
 import com.expensecalculator.security.jwt.CustomUserDetailsService;
 import com.expensecalculator.security.jwt.JWTAuthenticationEntryPoint;
 import com.expensecalculator.security.jwt.JWTAuthenticationFilter;
-import com.expensecalculator.security.constants.SecurityConstants;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
         securedEnabled = true,
@@ -31,16 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JWTAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomUserDetailsService detailsService;
 
-    @Autowired
-    public SecurityConfig(final JWTAuthenticationEntryPoint authenticationEntryPoint,
-                          final CustomUserDetailsService detailsService) {
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.detailsService = detailsService;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().and().csrf().disable()
+        http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

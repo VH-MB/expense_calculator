@@ -8,6 +8,6 @@ public class ExpenseCalculatorApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ExpenseCalculatorApplication.class, args);
-
     }
+
 }

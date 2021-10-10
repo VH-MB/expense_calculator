@@ -1,15 +1,18 @@
 package com.expensecalculator.security.payload.request;
 
 
+import com.expensecalculator.shared.validation.ValidationMessages;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Data
 public class LoginRequest {
 
-    @NotEmpty(message = "Username cannot be empty")
+    @NotBlank(message = ValidationMessages.USERNAME_NOT_BLANK)
     private String username;
-    @NotEmpty(message = "Password cannot be empty")
+
+    @NotBlank(message = ValidationMessages.PASSWORD_NOT_BLANK)
     private String password;
 }

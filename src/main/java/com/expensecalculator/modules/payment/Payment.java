@@ -1,6 +1,7 @@
 package com.expensecalculator.modules.payment;
 
-import com.expensecalculator.modules.user.User;
+import com.expensecalculator.modules.person.Person;
+import com.expensecalculator.shared.validation.ValidationMessages;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +19,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-import static java.math.BigDecimal.ROUND_HALF_UP;
 
 @Entity
 @AllArgsConstructor
@@ -36,8 +33,6 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPayment;
 
-    @NotBlank(message = "Description cannot be empty")
-    @Size(min = 5, max = 50)
     @Column(columnDefinition = "text", nullable = false)
     private String description;
 
@@ -47,7 +42,7 @@ public class Payment {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = ValidationMessages.FORMAT_DATE)
     @Column(updatable = false)
     private LocalDateTime startDataTime;
 
@@ -57,8 +52,8 @@ public class Payment {
                     CascadeType.MERGE,
                     CascadeType.PERSIST,
                     CascadeType.REFRESH})
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     @PersistenceConstructor
     public Payment() {
@@ -69,8 +64,8 @@ public class Payment {
         this.startDataTime = LocalDateTime.now();
     }
 
-    public void addUser(User newUser) {
-        if (user == null) user = new User();
-        this.user = newUser;
+    public void addPerson(Person newPerson) {
+        if (person == null) person = new Person();
+        this.person = newPerson;
     }
 }

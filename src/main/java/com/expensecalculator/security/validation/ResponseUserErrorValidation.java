@@ -1,6 +1,5 @@
 package com.expensecalculator.security.validation;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Scope(value = "prototype")
-public class ResponseErrorValidation {
+public class ResponseUserErrorValidation {
 
     public ResponseEntity<Object> mapValidationService(BindingResult result) {
         if (result.hasErrors()) {

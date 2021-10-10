@@ -2,8 +2,8 @@ package com.expensecalculator.modules.payment;
 
 import com.expensecalculator.modules.payment.dto.PaymentDto;
 import com.expensecalculator.modules.payment.exception.PaymentNotFoundException;
-import com.expensecalculator.modules.user.User;
-import com.expensecalculator.modules.user.UserService;
+import com.expensecalculator.modules.person.Person;
+import com.expensecalculator.modules.person.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +21,7 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final PaymentQueryRepository paymentQueryRepository;
-    private final UserService userService;
+    private final PersonService personService;
 
     public List<Payment> findAllPayment() {
         List<Payment> payments = paymentQueryRepository.findAll();
@@ -34,17 +34,17 @@ public class PaymentService {
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId));
     }
 
-    public Payment createPayment(PaymentDto paymentDto, Long userId) {
-        System.out.println(paymentDto);
-        User user = userService.findUserById(userId);
+    public Payment createPayment(PaymentDto paymentDto, Long personId) {
+        Person person = personService.findPersonById(personId);
 
         Payment payment = new Payment();
         payment.setIdPayment(paymentDto.getId());
         payment.setDescription(paymentDto.getDescription());
         payment.setLocation(paymentDto.getLocation());
         payment.setPrice(paymentDto.getPrice().setScale(2, BigDecimal.ROUND_DOWN));
-        payment.addUser(user);
+        payment.addPerson(person);
 
+        LOG.info("Saving payment for Person: {}", person.getId());
         return paymentRepository.save(payment);
     }
 

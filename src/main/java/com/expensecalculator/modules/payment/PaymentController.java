@@ -3,12 +3,9 @@ package com.expensecalculator.modules.payment;
 
 import com.expensecalculator.modules.payment.dto.PaymentDto;
 import com.expensecalculator.security.payload.response.MessageResponse;
-import com.expensecalculator.security.validation.ResponseErrorValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +27,6 @@ class PaymentController {
 
     private final PaymentService paymentService;
     private final PaymentFacade paymentFacade;
-    private final ResponseErrorValidation responseErrorValidation;
 
     @GetMapping("/all")
     ResponseEntity<List<PaymentDto>> getAllPayment() {
@@ -47,10 +43,7 @@ class PaymentController {
 
     @PostMapping("/add/{userId}")
     ResponseEntity<Object> createPayment(@Valid @RequestBody PaymentDto paymentDto,
-                                         @PathVariable("userId") String userId,
-                                         BindingResult bindingResult) {
-        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
-        if (!ObjectUtils.isEmpty(errors)) return errors;
+                                         @PathVariable("userId") String userId) {
 
         Payment payment = paymentService.createPayment(paymentDto, Long.parseLong(userId));
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentFacade.paymentToPaymentDto(payment));
